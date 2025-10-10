@@ -5,7 +5,8 @@
 local map = vim.keymap.set
 
 vim.opt.timeoutlen = 300 --in ms
-vim.keymap.set({ "i", "t", "c" }, "jk", "<Esc>", { noremap = true, silent = true })
+map("i", "jk", "<Esc>", { noremap = true, silent = true })
+map({ "n", "t" }, "<C-c>", "<cmd> %y+ <CR>", { desc = "Copy complete file", silent = true })
 
 -- better up/down
 map({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
