@@ -1,35 +1,48 @@
 return {
   {
     "neovim/nvim-lspconfig",
-    opts = {
-      servers = {
-        ruff_lsp = {
-          init_options = {
-            settings = {
-              args = {},
-            },
-          },
-        },
-      },
-      setup = {
-        ruff_lsp = function(_, opts)
-          local lspconfig = require("lspconfig")
-          lspconfig.ruff_lsp.setup({
-            on_attach = function(client, bufnr)
-              -- Disable hover in favor of Pyright (if you use it later)
-              client.server_capabilities.hoverProvider = false
-              -- Autoformat and organize imports on save
-              vim.api.nvim_create_autocmd("BufWritePre", {
-                buffer = bufnr,
-                callback = function()
-                  vim.lsp.buf.format({ async = false })
-                end,
-              })
-            end,
-            settings = opts.settings,
-          })
-        end,
-      },
-    },
+    opts = function(_, opts)
+      -- Load language configs
+      local python = require("languages.python")
+      local cpp = require("languages.cpp")
+      -- local frontend = require("languages.frontend")
+      local lua_lang = require("languages.lua")
+
+      -- Merge servers from all languages
+      opts.servers =
+        vim.tbl_deep_extend("force", opts.servers or {}, python.lsp or {}, cpp.lsp or {}, lua_lang.lsp or {}) --, frontend.lsp or {})
+
+      -- Merge custom setup functions
+      opts.setup = opts.setup or {}
+
+      -- Add Python custom setups
+      if python.lsp_setup then
+        for server, setup_fn in pairs(python.lsp_setup) do
+          opts.setup[server] = setup_fn
+        end
+      end
+
+      if cpp.lsp_setup then
+        for server, setup_fn in pairs(cpp.lsp_setup) do
+          opts.setup[server] = setup_fn
+        end
+      end
+
+      -- -- Add Frontend custom setups (if any)
+      -- if frontend.lsp_setup then
+      --   for server, setup_fn in pairs(frontend.lsp_setup) do
+      --     opts.setup[server] = setup_fn
+      --   end
+      -- end
+      --
+      -- Add Lua custom setups (if any)
+      if lua_lang.lsp_setup then
+        for server, setup_fn in pairs(lua_lang.lsp_setup) do
+          opts.setup[server] = setup_fn
+        end
+      end
+
+      return opts
+    end,
   },
 }
