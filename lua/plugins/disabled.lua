@@ -1,4 +1,4 @@
 return {
-  -- disable trouble
-  { "folke/flash.nvim", enabled = false },
+  -- disable grug-far
+  { "MagicDuck/grug-far.nvim", enabled = false },
 }
