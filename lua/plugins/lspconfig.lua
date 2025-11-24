@@ -5,12 +5,13 @@ return {
       -- Load language configs
       local python = require("languages.python")
       local cpp = require("languages.cpp")
+      local markdown = require("languages.markdown")
       -- local frontend = require("languages.frontend")
       local lua_lang = require("languages.lua")
 
       -- Merge servers from all languages
       opts.servers =
-        vim.tbl_deep_extend("force", opts.servers or {}, python.lsp or {}, cpp.lsp or {}, lua_lang.lsp or {}) --, frontend.lsp or {})
+        vim.tbl_deep_extend("force", opts.servers or {}, python.lsp or {}, cpp.lsp or {}, lua_lang.lsp or {}, markdown.lsp or {}) --, frontend.lsp or {})
 
       -- Merge custom setup functions
       opts.setup = opts.setup or {}
@@ -24,6 +25,12 @@ return {
 
       if cpp.lsp_setup then
         for server, setup_fn in pairs(cpp.lsp_setup) do
+          opts.setup[server] = setup_fn
+        end
+      end
+
+      if markdown.lsp_setup then
+        for server, setup_fn in pairs(markdown.lsp_setup) do
           opts.setup[server] = setup_fn
         end
       end
