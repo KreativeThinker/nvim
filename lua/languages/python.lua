@@ -1,7 +1,7 @@
 -- languages/python.lua
 local M = {}
 
-M.servers = { "ty", "ruff" }
+M.servers = { "ty", "ruff", "pyright" }
 
 M.setup = {
   ty = function()
@@ -14,9 +14,6 @@ M.setup = {
         default_config = {
           cmd = { "ty", "lsp" },
           filetypes = { "python" },
-          root_dir = function(fname)
-            return lspconfig.util.find_git_ancestor(fname) or vim.loop.os_homedir()
-          end,
         },
       }
     end
@@ -38,6 +35,27 @@ M.setup = {
       on_attach = function(client)
         client.server_capabilities.hoverProvider = false
         client.server_capabilities.completionProvider = nil
+      end,
+    })
+  end,
+
+  pyright = function()
+    vim.lsp.config("pyright", {
+      settings = {
+        pyright = {
+          disableLanguageServices = true,
+          disableOrganizeImports = true,
+        },
+        python = {
+          analysis = {
+            autoImportCompletions = true,
+            typeCheckingMode = "off",
+          },
+        },
+      },
+      on_attach = function(client)
+        client.server_capabilities.hoverProvider = false
+        client.server_capabilities.diagnosticProvider = false
       end,
     })
   end,
