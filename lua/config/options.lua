@@ -1,0 +1,25 @@
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
+
+local o = vim.o
+o.number = true
+o.relativenumber = true
+o.signcolumn = "yes"
+o.cursorline = true
+o.termguicolors = true
+o.mouse = "a"
+o.clipboard = "unnamedplus"
+o.ignorecase = true
+o.smartcase = true
+o.splitright = true
+o.splitbelow = true
+o.scrolloff = 8
+o.undofile = true
+o.updatetime = 250
+o.timeoutlen = 300
+o.expandtab = true
+o.shiftwidth = 2
+o.tabstop = 2
+o.autoread = true -- pick up edits made by LLM agents
+o.confirm = true
+o.showtabline = 2 -- always show tab bar
